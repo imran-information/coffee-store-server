@@ -51,7 +51,27 @@ async function run() {
             const result = await coffeeCollection.findOne(query)
             res.send(result)
         })
-        
+
+        app.put('/coffee/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updateCoffee = req.body
+            const coffee = {
+                $set: {
+                    name: updateCoffee.name,
+                    chef: updateCoffee.chef,
+                    supplier: updateCoffee.supplier,
+                    taste: updateCoffee.taste,
+                    category: updateCoffee.category,
+                    details: updateCoffee.details,
+                    photo: updateCoffee.photo
+                }
+            }
+            const result = await coffeeCollection.updateOne(filter, coffee, option)
+            res.send(result)
+        })
+
         app.delete('/coffee/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
